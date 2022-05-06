@@ -1,14 +1,14 @@
 from django.shortcuts import render
+from django.db.models import Q
 from store.models import Product
 
 # Create your views here.
 def say_hello(request):
-    # filter query using keyword=value (queryset api)
-    query_set = Product.objects.filter(unit_price__range=(20,30))
+    # products: inventory < 10 AND inventory < 20, this simple query can be done like this:
+    # query_set = Product.objects.filter(inventory__lt=10, inventory__lt=20)
 
-    # # query relation to collection
-    # query_set = Product.objects.filter(collection__id__range=(1,2,3))
+    # products: inventory < 10 AND NOT inventory < 20, this complex query can be done like this:
+    query_set = Product.objects.filter(Q(inventory__lt=10) & ~Q(inventory__lt=20))
 
-    # query_set = Product.objects.filter(description__isnull=True)
 
     return render(request, "hello.html", {'name': 'Matahari Ramadhan', 'products': list(query_set)})
