@@ -1,19 +1,14 @@
-from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponse
 from django.shortcuts import render
 from store.models import Product
 
 # Create your views here.
 def say_hello(request):
-    # query_set = Product.objects.all() # this return query set
+    # filter query using keyword=value (queryset api)
+    query_set = Product.objects.filter(unit_price__range=(20,30))
 
-    # try: # need try catch block to catch exception
-    #     product = Product.objects.get(pk=0) # this return actual object
-    # except ObjectDoesNotExist:
-    #     pass
+    # # query relation to collection
+    # query_set = Product.objects.filter(collection__id__range=(1,2,3))
 
-    # query_set = Product.objects.filter(pk=0).first() # better way to do above logic
+    # query_set = Product.objects.filter(description__isnull=True)
 
-    isExist = Product.objects.filter(pk=0).exists() # checking if object is exist or not
-
-    return render(request, "hello.html", {'name': 'Matahari Ramadhan'})
+    return render(request, "hello.html", {'name': 'Matahari Ramadhan', 'products': list(query_set)})
