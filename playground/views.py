@@ -1,9 +1,9 @@
+from unittest import result
 from django.shortcuts import render
-from django.db.models.aggregates import Count, Min, Max
-from store.models import Product, OrderItem, Order
+from django.db.models import Value, F
+from store.models import Product, OrderItem, Order, Customer
 
 # Create your views here.
 def say_hello(request):
-    result = Product.objects.filter(collection_id=1).aggregate(count=Count('id'), min_price=Min('unit_price'))
-
-    return render(request, "hello.html", {'name': 'Matahari Ramadhan', 'result': result})
+    queryset = Customer.objects.annotate(new_id=F('id')+1)
+    return render(request, "hello.html", {'name': 'Matahari Ramadhan', 'result': queryset})
